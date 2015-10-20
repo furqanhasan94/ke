@@ -7,13 +7,16 @@
 package com.lsms.entities;
 
 import java.io.Serializable;
+import java.sql.Date;
 import java.sql.Time;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
@@ -39,27 +42,13 @@ public class LsDeviation implements Serializable {
     private Time enTime ;
     
     @NotNull
-    @OneToOne
-    @JoinColumn(name = "group_id")
-    private Groups gp_id  ;
+    @Column(name = "event_date")
+    private Date eventDate ;
     
     @NotNull
-    @OneToOne
-    @JoinColumn(name = "grid_id")
-    private Grids grId ;
+    @Column(name = "status")
+    private boolean devStatus ;
     
-    @NotNull
-    @Column(name = "mlload")
-    private String mlLoad ;
-    
-    @NotNull
-    @Column(name = "hlload")
-    private String hlLoad ;
-    
-    @NotNull
-    @Column(name = "vhlload")
-    private String vhlLoad ;
-
     /**
      * @return the id
      */
@@ -103,76 +92,30 @@ public class LsDeviation implements Serializable {
     }
 
     /**
-     * @return the gp_id
+     * @return the eventDate
      */
-    public Groups getGp_id() {
-        return gp_id;
+    public Date getEventDate() {
+        return eventDate;
     }
 
     /**
-     * @param gp_id the gp_id to set
+     * @param eventDate the eventDate to set
      */
-    public void setGp_id(Groups gp_id) {
-        this.gp_id = gp_id;
+    public void setEventDate(Date eventDate) {
+        this.eventDate = eventDate;
     }
 
     /**
-     * @return the grId
+     * @return the devStatus
      */
-    public Grids getGrId() {
-        return grId;
+    public boolean getDevStatus() {
+        return devStatus;
     }
 
     /**
-     * @param grId the grId to set
+     * @param devStatus the devStatus to set
      */
-    public void setGrId(Grids grId) {
-        this.grId = grId;
+    public void setDevStatus(boolean devStatus) {
+        this.devStatus = devStatus;
     }
-
-    /**
-     * @return the mlLoad
-     */
-    public String getMlLoad() {
-        return mlLoad;
-    }
-
-    /**
-     * @param mlLoad the mlLoad to set
-     */
-    public void setMlLoad(String mlLoad) {
-        this.mlLoad = mlLoad;
-    }
-
-    /**
-     * @return the hlLoad
-     */
-    public String getHlLoad() {
-        return hlLoad;
-    }
-
-    /**
-     * @param hlLoad the hlLoad to set
-     */
-    public void setHlLoad(String hlLoad) {
-        this.hlLoad = hlLoad;
-    }
-
-    /**
-     * @return the vhlLoad
-     */
-    public String getVhlLoad() {
-        return vhlLoad;
-    }
-
-    /**
-     * @param vhlLoad the vhlLoad to set
-     */
-    public void setVhlLoad(String vhlLoad) {
-        this.vhlLoad = vhlLoad;
-    }
-    
-    
-    
-    
 }

@@ -27,9 +27,9 @@ public class Grids implements Serializable {
     
     
     @Id
-    @NotNull
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "grid_id")
-    private String gridId ;
+    private int gridId ;
     
     @NotNull
     @Column(name = "grid_name")
@@ -39,9 +39,23 @@ public class Grids implements Serializable {
     @ManyToOne
     @JoinColumn(name = "block_id")
     private Block block;
+   
     
-       
-    public String getGridId(){
+//    for chescking extended ls status of grid
+    @Column(name = "ext_status")
+    private boolean extensionStatus;
+    
+    //    for chescking unscheduled ls status of grid
+    @Column(name = "usl_status")
+    private boolean unSchLs ;
+    
+//    for chescking deviation status of grid
+    @Column(name = "dev_status")
+    private boolean deviationStatus ;
+    
+    
+   
+    public int getGridId(){
         return gridId ;
     }
     
@@ -49,24 +63,60 @@ public class Grids implements Serializable {
         return gridName ;
     }
    
+    public void setGridName(String gName){
+        this.gridName = gName ;
+    }
+    
     public Block getBlockId(){
         return block ;
     }
     
-    public void setGridId(String gId){
-        this.gridId = gId ;
-    }
-    
-    public void setGridName(String gName){
-        this.gridName = gName ;
-    }
     public void setBlockId(Block b){
         this.block = b ;
     }
- 
-    @Override
-    public String toString() {
-        return "com.lsms.Grids[ id=" + gridId + " ]";
+
+    /**
+     * @return the extensionStatus
+     */
+    public boolean getExtensionStatus() {
+        return extensionStatus;
+    }
+
+    /**
+     * @param extensionStatus the extensionStatus to set
+     */
+    public void setExtensionStatus(boolean extensionStatus) {
+        this.extensionStatus = extensionStatus;
+    }
+
+    /**
+     * @return the unSchLs
+     */
+    public boolean getUnSchLs() {
+        return unSchLs;
+    }
+
+    /**
+     * @param unSchLs the unSchLs to set
+     */
+    public void setUnSchLs(boolean unSchLs) {
+        this.unSchLs = unSchLs;
+    }
+
+   
+    /**
+     * @return the deviationStatus
+     */
+    public boolean getDeviationStatus() {
+        return deviationStatus;
+    }
+
+    /**
+     * @param deviationStatus the deviationStatus to set
+     */
+    public void setDeviationStatus(boolean deviationStatus) {
+        this.deviationStatus = deviationStatus;
     }
     
+ 
 }

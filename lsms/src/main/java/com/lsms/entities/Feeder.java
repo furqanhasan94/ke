@@ -10,6 +10,8 @@ import java.io.Serializable;
 import java.sql.Time;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -25,42 +27,19 @@ import javax.validation.constraints.NotNull;
 public class Feeder implements Serializable {
     
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "feeder_id")
-    private String feedId ;
+    private int feedId ;
     
     @NotNull
     @Column(name = "feeder_name")
     private String feedName ;
     
-    @NotNull
-    @Column(name = "cycle1_time")
-    private Time cycoff1 ;
-    
-    @NotNull
-    @Column(name = "cycle2_time")
-    private Time cycoff2 ;
-    
-    @NotNull
-    @Column(name = "cycle3_time")
-    private Time cycoff3 ;
-    
-    @NotNull
-    @Column(name = "cycle1_ontime")
-    private Time cycOn1 ;
-    
-    @NotNull
-    @Column(name = "cycle2_ontime")
-    private Time cycOn2 ;
-    
-    @NotNull
-    @Column(name = "cycle3_ontime")
-    private Time cycOn3 ;
-    
     @Column(name = "exempt")
-    private boolean exemption;
+    private boolean exemptionStatus;
     
     @Column(name = "reason")
-    private String reason ;
+    private String exemptReason ;
     
     @NotNull
     @ManyToOne
@@ -71,106 +50,172 @@ public class Feeder implements Serializable {
     @ManyToOne
     @JoinColumn(name = "cat_id")
     private Categories categoryId;
+
+    @NotNull
+    @ManyToOne
+    @JoinColumn(name = "grid_id")
+    private Grids gridId ;
     
-    public String getfeedId(){
-        return feedId ;
+    @NotNull
+    @ManyToOne
+    @JoinColumn(name = "group_id")
+    private Groups groupId ;
+    
+    @Column(name = "overload_status")
+    private boolean ovlStatus ;
+
+    @Column(name = "priority_status")
+    private boolean lsPriority ;
+    
+    @Column(name = "special_gp_status")
+    private boolean specialGroup ;
+    
+    /**
+     * @return the feedId
+     */
+    public int getFeedId() {
+        return feedId;
+    }
+
+    /**
+     * @return the feedName
+     */
+    public String getFeedName() {
+        return feedName;
+    }
+
+    /**
+     * @param feedName the feedName to set
+     */
+    public void setFeedName(String feedName) {
+        this.feedName = feedName;
+    }
+
+    /**
+     * @return the exemptionStatus
+     */
+    public boolean getExemptionStatus() {
+        return exemptionStatus;
+    }
+
+    /**
+     * @param exemptionStatus the exemptionStatus to set
+     */
+    public void setExemptionStatus(boolean exemptionStatus) {
+        this.exemptionStatus = exemptionStatus;
+    }
+
+    /**
+     * @return the exemptReason
+     */
+    public String getExemptReason() {
+        return exemptReason;
+    }
+
+    /**
+     * @param exemptReason the exemptReason to set
+     */
+    public void setExemptReason(String exemptReason) {
+        this.exemptReason = exemptReason;
+    }
+
+    /**
+     * @return the trafoId
+     */
+    public Transformer getTrafoId() {
+        return trafoId;
+    }
+
+    /**
+     * @param trafoId the trafoId to set
+     */
+    public void setTrafoId(Transformer trafoId) {
+        this.trafoId = trafoId;
+    }
+
+    /**
+     * @return the categoryId
+     */
+    public Categories getCategoryId() {
+        return categoryId;
+    }
+
+    /**
+     * @param categoryId the categoryId to set
+     */
+    public void setCategoryId(Categories categoryId) {
+        this.categoryId = categoryId;
+    }
+
+    /**
+     * @return the gridId
+     */
+    public Grids getGridId() {
+        return gridId;
+    }
+
+    /**
+     * @param gridId the gridId to set
+     */
+    public void setGridId(Grids gridId) {
+        this.gridId = gridId;
+    }
+
+    /**
+     * @return the groupId
+     */
+    public Groups getGroupId() {
+        return groupId;
+    }
+
+    /**
+     * @param groupId the groupId to set
+     */
+    public void setGroupId(Groups groupId) {
+        this.groupId = groupId;
+    }
+
+    /**
+     * @return the ovlStatus
+     */
+    public boolean getOvlStatus() {
+        return ovlStatus;
+    }
+
+    /**
+     * @param ovlStatus the ovlStatus to set
+     */
+    public void setOvlStatus(boolean ovlStatus) {
+        this.ovlStatus = ovlStatus;
+    }
+
+    /**
+     * @return the lsPriority
+     */
+    public boolean getLsPriority() {
+        return lsPriority;
+    }
+
+    /**
+     * @param lsPriority the lsPriority to set
+     */
+    public void setLsPriority(boolean lsPriority) {
+        this.lsPriority = lsPriority;
+    }
+
+    /**
+     * @return the specialGroup
+     */
+    public boolean getSpecialGroup() {
+        return specialGroup;
+    }
+
+    /**
+     * @param specialGroup the specialGroup to set
+     */
+    public void setSpecialGroup(boolean specialGroup) {
+        this.specialGroup = specialGroup;
     }
     
-    public String getFeedName(){
-        return feedName ;
-    }
-    
-    public Time getCyc1OffTime(){
-        return cycoff1;
-    }
   
-    public Time getCyc2OffTime(){
-        return cycoff2;
-    }
-    
-    public Time getCyc3OffTime(){
-        return cycoff3;
-    }
-    
-    public Time getCyc1OnTime(){
-        return cycOn1;
-    }
-  
-    public Time getCyc2OnTime(){
-        return cycOn2;
-    }
-    
-    public Time getCyc3OnTime(){
-        return cycOn3;
-    }
-    
-    public boolean getExStat(){
-        return exemption ;
-    }
-    
-    public String getReasonOfExemption(){
-        return reason ;
-    }
-    
-    public Transformer getTrafoId(){
-        return trafoId ;
-    }
-    
-    public Categories getCatId(){
-        return categoryId ;
-    }
-    
-    public void setFeedId(String fedId){
-        this.feedId = fedId ;
-    }
-    
-    public void setFeedName(String fedName){
-        this.feedName = fedName ;
-    }
-    
-    public void setCyc1OffTime(Time cyc1OffTime){
-        this.cycoff1 = cyc1OffTime ;
-    }
-    
-    public void setCyc2OffTime(Time cyc2OffTime){
-        this.cycoff2 = cyc2OffTime ;
-    }
-    
-    public void setCyc3OffTime(Time cyc3OffTime){
-        this.cycoff3 = cyc3OffTime ;
-    }
-   
-    public void setCyc1OnTime(Time cyc1OnTime){
-        this.cycOn1 = cyc1OnTime ;
-    }
-    
-    public void setCyc2OnTime(Time cyc2OnTime){
-        this.cycOn2 = cyc2OnTime ;
-    }
-    
-    public void setCyc3OnTime(Time cyc3OnTime){
-        this.cycOn3 = cyc3OnTime ;
-    }
-    
-    public void setExStat(boolean exStat){
-        this.exemption = exStat ;
-    }
-    
-    public void setReasonOfExemption(String reason){
-        this.reason = reason ;
-    }
-    
-    public void setTrafoId(Transformer tr){
-        this.trafoId = tr ;
-    }
-    
-    public void setCatId(Categories cat){
-        this.categoryId = cat ;
-    }
-    
-    @Override
-    public String toString() {
-        return "com.lsms.entities.Feeder[ id=" + feedId + " ]";
-    }
-    
 }

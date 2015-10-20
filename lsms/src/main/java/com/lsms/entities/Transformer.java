@@ -9,6 +9,8 @@ package com.lsms.entities;
 import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -24,8 +26,9 @@ import javax.validation.constraints.NotNull;
 public class Transformer implements Serializable {
     
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "trafo_id")
-    private String trafoId ;
+    private int trafoId ;
     
     @NotNull
     @Column(name = "trafo_name")
@@ -38,32 +41,33 @@ public class Transformer implements Serializable {
     @NotNull
     @ManyToOne
     @JoinColumn(name = "gird_id")
-    private Grids grid;
+    private Grids gridId;
     
-    public String getTrafoId(){
+    public int getTrafoId(){
         return trafoId ;
     }
     public String getTrafoName(){
         return tName ;
     }
-    public int getTrafoPower(){
-        return tPower ;
-    }
-    public Grids getTrafoGridId(){
-        return grid ;
-    }
     
-    public void setTrafoId(String tId){
-        this.trafoId = tId ;
-    }
     public void setTrafoName(String trafoName){
         this.tName = trafoName ;
     }
+    
+    public int getTrafoPower(){
+        return tPower ;
+    }
+    
     public void setTrafoPower(int tP){
         this.tPower = tP ;
     }
+    
+    public Grids getTrafoGridId(){
+        return gridId ;
+    }
+    
     public void setTrafoGridId(Grids tg){
-        this.grid = tg ;
+        this.gridId = tg ;
     }
     
     

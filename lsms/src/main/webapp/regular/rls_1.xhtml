@@ -1,0 +1,446 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+    
+    <h:head>
+        <title>Regular Load Shedding</title>
+    </h:head>
+    
+    <h:body>
+         <p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()"/>
+        <p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
+            <p:graphicImage library="images" name="ajaxloading.gif" />
+        </p:dialog>
+         <h:form id="rlsForm">
+            <p:panel>
+                <p:panelGrid columns="2">
+                    <p:outputLabel for="cycle" value="Select Cycle :"/>
+                    <p:selectOneMenu id="cycle" value="#{regularLsBean.cycle}">
+                        <f:selectItem itemLabel="Select Cycle" itemValue="" />
+                        <f:selectItems value="#{regularLsBean.lsCycles}" var="c" itemLabel="#{c.cycName}" itemValue="#{c}"/>
+                        <p:ajax event="change" listener="#{regularLsBean.onCycleSelect()}" update=":rlsForm:groups"/>
+                    </p:selectOneMenu>
+                </p:panelGrid>
+            </p:panel>
+            <p:separator/>
+            <p:panelGrid id="groups" columns="4" style="width: 100%;" >
+                <p:dataTable style="width:100%; font-size:50%;" scrollable="true" scrollWidth="300">
+                    <p:columnGroup type="header">
+                        <p:row>
+                            <p:column rowspan="4" headerText="1A"/>
+                            <p:column colspan="3" headerText="VHL"/>
+                            <p:column colspan="3" headerText="HL"/>
+                            <p:column colspan="3" headerText="ML"/>
+                        </p:row>
+                        <p:row>
+                            <p:column colspan="3" headerText="Number of feeders"/>
+                            <p:column colspan="3" headerText="Number of feeders"/>
+                            <p:column colspan="3" headerText="Number of feeders"/>
+                        </p:row>
+                         <p:row>
+                            <p:column headerText="ON"/>
+                            <p:column headerText="OFF"/>
+                            <p:column rowspan="2" headerText="LOAD" style="font-size: 70%;"/>
+                            <p:column headerText="ON"/>
+                            <p:column headerText="OFF"/>
+                            <p:column rowspan="2" headerText="LOAD" style="font-size: 70%;"/>
+                            <p:column headerText="ON"/>
+                            <p:column headerText="OFF"/>
+                            <p:column rowspan="2" headerText="LOAD" style="font-size: 70%;"/>
+                        </p:row>
+                        <p:row>
+                            <p:column headerText="#{regularLsBean.vhlOn1a}"/>
+                            <p:column headerText="#{regularLsBean.vhlOff1a}"/>
+                            <p:column headerText="#{regularLsBean.hlOn1a}"/>
+                            <p:column headerText="#{regularLsBean.hlOff1a}"/>
+                            <p:column headerText="#{regularLsBean.mlOn1a}"/>
+                            <p:column headerText="#{regularLsBean.mlOff1a}"/>
+                        </p:row>
+                    </p:columnGroup>
+                </p:dataTable>
+                <p:dataTable style="width:100%; font-size:50%;" scrollable="true" scrollWidth="300">
+                    <p:columnGroup type="header">
+                        <p:row>
+                            <p:column rowspan="4" headerText="2A"/>
+                            <p:column colspan="3" headerText="VHL"/>
+                            <p:column colspan="3" headerText="HL"/>
+                            <p:column colspan="3" headerText="ML"/>
+                        </p:row>
+                        <p:row>
+                            <p:column colspan="3" headerText="Number of feeders"/>
+                            <p:column colspan="3" headerText="Number of feeders"/>
+                            <p:column colspan="3" headerText="Number of feeders"/>
+                        </p:row>
+                          <p:row>
+                            <p:column headerText="ON"/>
+                            <p:column headerText="OFF"/>
+                            <p:column rowspan="2" headerText="LOAD" style="font-size: 75%;"/>
+                            <p:column headerText="ON"/>
+                            <p:column headerText="OFF"/>
+                            <p:column rowspan="2" headerText="LOAD" style="font-size: 75%;"/>
+                            <p:column headerText="ON"/>
+                            <p:column headerText="OFF"/>
+                            <p:column rowspan="2" headerText="LOAD" style="font-size: 75%;"/>
+                        </p:row>
+                        <p:row>
+                            <p:column headerText="on time"/>
+                            <p:column headerText="off time"/>
+                            <p:column headerText="on time"/>
+                            <p:column headerText="off time"/>
+                            <p:column headerText="on time"/>
+                            <p:column headerText="off time"/>
+                        </p:row>
+                    </p:columnGroup>
+                </p:dataTable>
+                <p:dataTable style="width:100%; font-size:50%;" scrollable="true" scrollWidth="300">
+                    <p:columnGroup type="header">
+                        <p:row>
+                            <p:column rowspan="4" headerText="3A"/>
+                            <p:column colspan="3" headerText="VHL"/>
+                            <p:column colspan="3" headerText="HL"/>
+                            <p:column colspan="3" headerText="ML"/>
+                        </p:row>
+                        <p:row>
+                            <p:column colspan="3" headerText="Number of feeders"/>
+                            <p:column colspan="3" headerText="Number of feeders"/>
+                            <p:column colspan="3" headerText="Number of feeders"/>
+                        </p:row>
+                         <p:row>
+                            <p:column headerText="ON"/>
+                            <p:column headerText="OFF"/>
+                            <p:column rowspan="2" headerText="LOAD" style="font-size: 75%;"/>
+                            <p:column headerText="ON"/>
+                            <p:column headerText="OFF"/>
+                            <p:column rowspan="2" headerText="LOAD" style="font-size: 75%;"/>
+                            <p:column headerText="ON"/>
+                            <p:column headerText="OFF"/>
+                            <p:column rowspan="2" headerText="LOAD" style="font-size: 75%;"/>
+                        </p:row>
+                        <p:row>
+                            <p:column headerText="on time"/>
+                            <p:column headerText="off time"/>
+                            <p:column headerText="on time"/>
+                            <p:column headerText="off time"/>
+                            <p:column headerText="on time"/>
+                            <p:column headerText="off time"/>
+                        </p:row>
+                    </p:columnGroup>
+                </p:dataTable>
+                <p:dataTable style="width:100%; font-size:50%;" scrollable="true" scrollWidth="300">
+                    <p:columnGroup type="header">
+                        <p:row>
+                            <p:column rowspan="4" headerText="4A"/>
+                            <p:column colspan="3" headerText="VHL"/>
+                            <p:column colspan="3" headerText="HL"/>
+                            <p:column colspan="3" headerText="ML"/>
+                        </p:row>
+                        <p:row>
+                            <p:column colspan="3" headerText="Number of feeders"/>
+                            <p:column colspan="3" headerText="Number of feeders"/>
+                            <p:column colspan="3" headerText="Number of feeders"/>
+                        </p:row>
+                         <p:row>
+                            <p:column headerText="ON"/>
+                            <p:column headerText="OFF"/>
+                            <p:column rowspan="2" headerText="LOAD" style="font-size: 75%;"/>
+                            <p:column headerText="ON"/>
+                            <p:column headerText="OFF"/>
+                            <p:column rowspan="2" headerText="LOAD" style="font-size: 75%;"/>
+                            <p:column headerText="ON"/>
+                            <p:column headerText="OFF"/>
+                            <p:column rowspan="2" headerText="LOAD" style="font-size: 75%;"/>
+                        </p:row>
+                        <p:row>
+                            <p:column headerText="on time"/>
+                            <p:column headerText="off time"/>
+                            <p:column headerText="on time"/>
+                            <p:column headerText="off time"/>
+                            <p:column headerText="on time"/>
+                            <p:column headerText="off time"/>
+                        </p:row>
+                    </p:columnGroup>
+                </p:dataTable>
+                <p:dataTable style="width:100%; font-size:50%;" scrollable="true" scrollWidth="300">
+                    <p:columnGroup type="header">
+                        <p:row>
+                            <p:column rowspan="4" headerText="1B"/>
+                            <p:column colspan="3" headerText="VHL"/>
+                            <p:column colspan="3" headerText="HL"/>
+                            <p:column colspan="3" headerText="ML"/>
+                        </p:row>
+                        <p:row>
+                            <p:column colspan="3" headerText="Number of feeders"/>
+                            <p:column colspan="3" headerText="Number of feeders"/>
+                            <p:column colspan="3" headerText="Number of feeders"/>
+                        </p:row>
+                         <p:row>
+                            <p:column headerText="ON"/>
+                            <p:column headerText="OFF"/>
+                            <p:column rowspan="2" headerText="LOAD" style="font-size: 75%;"/>
+                            <p:column headerText="ON"/>
+                            <p:column headerText="OFF"/>
+                            <p:column rowspan="2" headerText="LOAD" style="font-size: 75%;"/>
+                            <p:column headerText="ON"/>
+                            <p:column headerText="OFF"/>
+                            <p:column rowspan="2" headerText="LOAD" style="font-size: 75%;"/>
+                        </p:row>
+                        <p:row>
+                            <p:column headerText="on time"/>
+                            <p:column headerText="off time"/>
+                            <p:column headerText="on time"/>
+                            <p:column headerText="off time"/>
+                            <p:column headerText="on time"/>
+                            <p:column headerText="off time"/>
+                        </p:row>
+                    </p:columnGroup>
+                </p:dataTable>
+                <p:dataTable style="width:100%; font-size:50%;" scrollable="true" scrollWidth="300">
+                    <p:columnGroup type="header">
+                        <p:row>
+                            <p:column rowspan="4" headerText="2B"/>
+                            <p:column colspan="3" headerText="VHL"/>
+                            <p:column colspan="3" headerText="HL"/>
+                            <p:column colspan="3" headerText="ML"/>
+                        </p:row>
+                        <p:row>
+                            <p:column colspan="3" headerText="Number of feeders"/>
+                            <p:column colspan="3" headerText="Number of feeders"/>
+                            <p:column colspan="3" headerText="Number of feeders"/>
+                        </p:row>
+                          <p:row>
+                            <p:column headerText="ON"/>
+                            <p:column headerText="OFF"/>
+                            <p:column rowspan="2" headerText="LOAD" style="font-size: 75%;"/>
+                            <p:column headerText="ON"/>
+                            <p:column headerText="OFF"/>
+                            <p:column rowspan="2" headerText="LOAD" style="font-size: 75%;"/>
+                            <p:column headerText="ON"/>
+                            <p:column headerText="OFF"/>
+                            <p:column rowspan="2" headerText="LOAD" style="font-size: 75%;"/>
+                        </p:row>
+                        <p:row>
+                            <p:column headerText="on time"/>
+                            <p:column headerText="off time"/>
+                            <p:column headerText="on time"/>
+                            <p:column headerText="off time"/>
+                            <p:column headerText="on time"/>
+                            <p:column headerText="off time"/>
+                        </p:row>
+                    </p:columnGroup>
+                </p:dataTable>
+                <p:dataTable style="width:100%; font-size:50%;" scrollable="true" scrollWidth="300">
+                    <p:columnGroup type="header">
+                        <p:row>
+                            <p:column rowspan="4" headerText="3B"/>
+                            <p:column colspan="3" headerText="VHL"/>
+                            <p:column colspan="3" headerText="HL"/>
+                            <p:column colspan="3" headerText="ML"/>
+                        </p:row>
+                        <p:row>
+                            <p:column colspan="3" headerText="Number of feeders"/>
+                            <p:column colspan="3" headerText="Number of feeders"/>
+                            <p:column colspan="3" headerText="Number of feeders"/>
+                        </p:row>
+                          <p:row>
+                            <p:column headerText="ON"/>
+                            <p:column headerText="OFF"/>
+                            <p:column rowspan="2" headerText="LOAD" style="font-size: 75%;"/>
+                            <p:column headerText="ON"/>
+                            <p:column headerText="OFF"/>
+                            <p:column rowspan="2" headerText="LOAD" style="font-size: 75%;"/>
+                            <p:column headerText="ON"/>
+                            <p:column headerText="OFF"/>
+                            <p:column rowspan="2" headerText="LOAD" style="font-size: 75%;"/>
+                        </p:row>
+                        <p:row>
+                            <p:column headerText="on time"/>
+                            <p:column headerText="off time"/>
+                            <p:column headerText="on time"/>
+                            <p:column headerText="off time"/>
+                            <p:column headerText="on time"/>
+                            <p:column headerText="off time"/>
+                        </p:row>
+                    </p:columnGroup>
+                </p:dataTable>
+               <p:dataTable style="width:100%; font-size:50%;" scrollable="true" scrollWidth="300">
+                    <p:columnGroup type="header">
+                        <p:row>
+                            <p:column rowspan="4" headerText="4B"/>
+                            <p:column colspan="3" headerText="VHL"/>
+                            <p:column colspan="3" headerText="HL"/>
+                            <p:column colspan="3" headerText="ML"/>
+                        </p:row>
+                        <p:row>
+                            <p:column colspan="3" headerText="Number of feeders"/>
+                            <p:column colspan="3" headerText="Number of feeders"/>
+                            <p:column colspan="3" headerText="Number of feeders"/>
+                        </p:row>
+                        <p:row>
+                            <p:column headerText="ON"/>
+                            <p:column headerText="OFF"/>
+                            <p:column rowspan="2" headerText="LOAD" style="font-size: 75%;"/>
+                            <p:column headerText="ON"/>
+                            <p:column headerText="OFF"/>
+                            <p:column rowspan="2" headerText="LOAD" style="font-size: 75%;"/>
+                            <p:column headerText="ON"/>
+                            <p:column headerText="OFF"/>
+                            <p:column rowspan="2" headerText="LOAD" style="font-size: 75%;"/>
+                        </p:row>
+                        <p:row>
+                            <p:column headerText="on time"/>
+                            <p:column headerText="off time"/>
+                            <p:column headerText="on time"/>
+                            <p:column headerText="off time"/>
+                            <p:column headerText="on time"/>
+                            <p:column headerText="off time"/>
+                        </p:row>
+                    </p:columnGroup>
+                </p:dataTable>
+                <p:dataTable style="width:100%; font-size:50%;" scrollable="true" scrollWidth="300">
+                    <p:columnGroup type="header">
+                        <p:row>
+                            <p:column rowspan="4" headerText="1C"/>
+                            <p:column colspan="3" headerText="VHL"/>
+                            <p:column colspan="3" headerText="HL"/>
+                            <p:column colspan="3" headerText="ML"/>
+                        </p:row>
+                        <p:row>
+                            <p:column colspan="3" headerText="Number of feeders"/>
+                            <p:column colspan="3" headerText="Number of feeders"/>
+                            <p:column colspan="3" headerText="Number of feeders"/>
+                        </p:row>
+                         <p:row>
+                            <p:column headerText="ON"/>
+                            <p:column headerText="OFF"/>
+                            <p:column rowspan="2" headerText="LOAD" style="font-size: 75%;"/>
+                            <p:column headerText="ON"/>
+                            <p:column headerText="OFF"/>
+                            <p:column rowspan="2" headerText="LOAD" style="font-size: 75%;"/>
+                            <p:column headerText="ON"/>
+                            <p:column headerText="OFF"/>
+                            <p:column rowspan="2" headerText="LOAD" style="font-size: 75%;"/>
+                        </p:row>
+                        <p:row>
+                            <p:column headerText="on time"/>
+                            <p:column headerText="off time"/>
+                            <p:column headerText="on time"/>
+                            <p:column headerText="off time"/>
+                            <p:column headerText="on time"/>
+                            <p:column headerText="off time"/>
+                        </p:row>
+                    </p:columnGroup>
+                </p:dataTable>
+                <p:dataTable style="width:100%; font-size:50%;" scrollable="true" scrollWidth="300">
+                    <p:columnGroup type="header">
+                        <p:row>
+                            <p:column rowspan="4" headerText="2C"/>
+                            <p:column colspan="3" headerText="VHL"/>
+                            <p:column colspan="3" headerText="HL"/>
+                            <p:column colspan="3" headerText="ML"/>
+                        </p:row>
+                        <p:row>
+                            <p:column colspan="3" headerText="Number of feeders"/>
+                            <p:column colspan="3" headerText="Number of feeders"/>
+                            <p:column colspan="3" headerText="Number of feeders"/>
+                        </p:row>
+                          <p:row>
+                            <p:column headerText="ON"/>
+                            <p:column headerText="OFF"/>
+                            <p:column rowspan="2" headerText="LOAD" style="font-size: 75%;"/>
+                            <p:column headerText="ON"/>
+                            <p:column headerText="OFF"/>
+                            <p:column rowspan="2" headerText="LOAD" style="font-size: 75%;"/>
+                            <p:column headerText="ON"/>
+                            <p:column headerText="OFF"/>
+                            <p:column rowspan="2" headerText="LOAD" style="font-size: 75%;"/>
+                        </p:row>
+                        <p:row>
+                            <p:column headerText="on time"/>
+                            <p:column headerText="off time"/>
+                            <p:column headerText="on time"/>
+                            <p:column headerText="off time"/>
+                            <p:column headerText="on time"/>
+                            <p:column headerText="off time"/>
+                        </p:row>
+                    </p:columnGroup>
+                </p:dataTable>
+                <p:dataTable style="width:100%; font-size:50%;" scrollable="true" scrollWidth="300">
+                    <p:columnGroup type="header">
+                        <p:row>
+                            <p:column rowspan="4" headerText="3C"/>
+                            <p:column colspan="3" headerText="VHL"/>
+                            <p:column colspan="3" headerText="HL"/>
+                            <p:column colspan="3" headerText="ML"/>
+                        </p:row>
+                        <p:row>
+                            <p:column colspan="3" headerText="Number of feeders"/>
+                            <p:column colspan="3" headerText="Number of feeders"/>
+                            <p:column colspan="3" headerText="Number of feeders"/>
+                        </p:row>
+
+                          <p:row>
+                            <p:column headerText="ON"/>
+                            <p:column headerText="OFF"/>
+                            <p:column rowspan="2" headerText="LOAD" style="font-size: 75%;"/>
+                            <p:column headerText="ON"/>
+                            <p:column headerText="OFF"/>
+                            <p:column rowspan="2" headerText="LOAD" style="font-size: 75%;"/>
+                            <p:column headerText="ON"/>
+                            <p:column headerText="OFF"/>
+                            <p:column rowspan="2" headerText="LOAD" style="font-size: 75%;"/>
+                        </p:row>
+                        <p:row>
+                            <p:column headerText="on time"/>
+                            <p:column headerText="off time"/>
+                            <p:column headerText="on time"/>
+                            <p:column headerText="off time"/>
+                            <p:column headerText="on time"/>
+                            <p:column headerText="off time"/>
+                        </p:row>
+                    </p:columnGroup>
+                </p:dataTable>
+                <p:dataTable style="width:100%; font-size:50%;" scrollable="true" scrollWidth="300">
+                    <p:columnGroup type="header">
+                        <p:row>
+                            <p:column rowspan="4" headerText="4C"/>
+                            <p:column colspan="3" headerText="VHL"/>
+                            <p:column colspan="3" headerText="HL"/>
+                            <p:column colspan="3" headerText="ML"/>
+                        </p:row>
+                        <p:row>
+                            <p:column colspan="3" headerText="Number of feeders"/>
+                            <p:column colspan="3" headerText="Number of feeders"/>
+                            <p:column colspan="3" headerText="Number of feeders"/>
+                        </p:row>
+                        <p:row>
+                            <p:column headerText="ON"/>
+                            <p:column headerText="OFF"/>
+                            <p:column rowspan="2" headerText="LOAD" style="font-size: 75%;"/>
+                            <p:column headerText="ON"/>
+                            <p:column headerText="OFF"/>
+                            <p:column rowspan="2" headerText="LOAD" style="font-size: 75%;"/>
+                            <p:column headerText="ON"/>
+                            <p:column headerText="OFF"/>
+                            <p:column rowspan="2" headerText="LOAD" style="font-size: 75%;"/>
+                        </p:row>
+                        <p:row>
+                            <p:column headerText="on time"/>
+                            <p:column headerText="off time"/>
+                            <p:column headerText="on time"/>
+                            <p:column headerText="off time"/>
+                            <p:column headerText="on time"/>
+                            <p:column headerText="off time"/>
+                        </p:row>
+                    </p:columnGroup>
+                </p:dataTable>
+            </p:panelGrid>
+        </h:form>
+    </h:body>
+</html>
+
+<!-- itemValue="#{c}"-->

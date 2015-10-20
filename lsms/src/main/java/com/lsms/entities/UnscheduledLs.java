@@ -29,7 +29,7 @@ public class UnscheduledLs implements Serializable {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "event_id")
+    @Column(name = "eventid")
     private int id;
 
     @NotNull
@@ -43,30 +43,18 @@ public class UnscheduledLs implements Serializable {
     private String reason;
     
     @NotNull
-    @ManyToOne
-    @JoinColumn(name = "grid_id")
-    private Grids gr_id ;
-    
-    @NotNull
-    @Column(name = "entry_time")
-    private Time et_Time;
-    
-    @NotNull
     @Column(name = "entry_date")
     private Date et_Date ;
 
+    @NotNull
+    @Column(name = "status")
+    private boolean ulsStatus ;
+    
     /**
      * @return the id
      */
     public int getId() {
         return id;
-    }
-
-    /**
-     * @param id the id to set
-     */
-    public void setId(int id) {
-        this.id = id;
     }
 
     /**
@@ -112,34 +100,6 @@ public class UnscheduledLs implements Serializable {
     }
 
     /**
-     * @return the gr_id
-     */
-    public Grids getGridId() {
-        return gr_id;
-    }
-
-    /**
-     * @param gr_id the gr_id to set
-     */
-    public void setGridId(Grids gr_id) {
-        this.gr_id = gr_id;
-    }
-
-    /**
-     * @return the et_Time
-     */
-    public Time getEntryTime() {
-        return et_Time;
-    }
-
-    /**
-     * @param et_Time the et_Time to set
-     */
-    public void setEntryTime(Time et_Time) {
-        this.et_Time = et_Time;
-    }
-
-    /**
      * @return the et_Date
      */
     public Date getEntryDate() {
@@ -151,6 +111,20 @@ public class UnscheduledLs implements Serializable {
      */
     public void setEntryDate(Date et_Date) {
         this.et_Date = et_Date;
+    }
+
+    /**
+     * @return the ulsStatus
+     */
+    public boolean getUlsStatus() {
+        return ulsStatus;
+    }
+
+    /**
+     * @param ulsStatus the ulsStatus to set
+     */
+    public void setUlsStatus(boolean ulsStatus) {
+        this.ulsStatus = ulsStatus;
     }
 
 }

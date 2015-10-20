@@ -9,6 +9,8 @@ package com.lsms.entities;
 import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
@@ -18,28 +20,24 @@ import javax.validation.constraints.NotNull;
  * @author furqan
  */
 @Entity
-@Table(name = "catagories")
+@Table(name = "categories")
 public class Categories implements Serializable {
    
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "cat_id")
-    private String catId;
+    private int catId;
     
     @NotNull
     @Column(name = "cat_name")
     private String catName ;
     
-    public String getCatId(){
+    public int getCatId(){
         return catId ;
     }
     
     public String getCatName(){
         return catName ;
-    }
-    
-    
-    public void setCatId(String id){
-        this.catId = id ;
     }
     
     public void setCatName(String name){

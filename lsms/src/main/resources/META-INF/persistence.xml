@@ -10,5 +10,21 @@
     <class>com.lsms.entities.UnscheduledLs</class>
     <class>com.lsms.entities.ExtendedLs</class>
     <class>com.lsms.entities.LsDeviation</class>
+    <class>com.lsms.entities.LsCycleTime</class>
+    <class>com.lsms.entities.LsCycle</class>
+    <class>com.lsms.entities.ExtCategoriesTime</class>
+    <class>com.lsms.entities.ExtendedCycle</class>
+    <class>com.lsms.entities.ExtGrid</class>
+    <class>com.lsms.entities.UnscheduledLsGrids</class>
+    <class>com.lsms.entities.DeviationGrid</class>
+    <class>com.lsms.entities.DeviationCategory</class>
+    <class>com.lsms.entities.RegularLs</class>
+    <class>com.lsms.entities.OverloadEvent</class>
+    <class>com.lsms.entities.SpecialGroupFeeder</class>
+    <class>com.lsms.entities.SpecialCycle</class>
+    <class>com.lsms.entities.SpecialCycleLoad</class>
+    <class>com.lsms.entities.LsPriority</class>
+    <class>com.lsms.entities.PriorityCycles</class>
+    <shared-cache-mode>NONE</shared-cache-mode>
   </persistence-unit>
 </persistence>

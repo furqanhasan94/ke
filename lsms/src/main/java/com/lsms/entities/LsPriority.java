@@ -41,15 +41,15 @@ public class LsPriority implements Serializable {
     private Date stDate ;
     
     @Column(name = "end_date")
-    private Date eDate ;
+    private Date endDate ;
     
     @NotNull
     @Column(name = "start_time")
-    private Time sTime ;
+    private Time stTime ;
     
     @NotNull
     @Column(name = "end_time")
-    private Time eTime ;
+    private Time endTime ;
     
     @Column(name = "informed_to")
     private String sboName ;
@@ -91,45 +91,45 @@ public class LsPriority implements Serializable {
     }
 
     /**
-     * @return the eDate
+     * @return the endDate
      */
-    public Date geteDate() {
-        return eDate;
+    public Date getEndDate() {
+        return endDate;
     }
 
     /**
-     * @param eDate the eDate to set
+     * @param endDate the endDate to set
      */
-    public void seteDate(Date eDate) {
-        this.eDate = eDate;
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
     }
 
     /**
-     * @return the sTime
+     * @return the stTime
      */
-    public Time getsTime() {
-        return sTime;
+    public Time getStTime() {
+        return stTime;
     }
 
     /**
-     * @param sTime the sTime to set
+     * @param sTime the stTime to set
      */
-    public void setsTime(Time sTime) {
-        this.sTime = sTime;
+    public void setStTime(Time sTime) {
+        this.stTime = sTime;
     }
 
     /**
-     * @return the eTime
+     * @return the endTime
      */
-    public Time geteTime() {
-        return eTime;
+    public Time getEndTime() {
+        return endTime;
     }
 
     /**
-     * @param eTime the eTime to set
+     * @param eTime the endTime to set
      */
-    public void seteTime(Time eTime) {
-        this.eTime = eTime;
+    public void setEndTime(Time eTime) {
+        this.endTime = eTime;
     }
 
     /**

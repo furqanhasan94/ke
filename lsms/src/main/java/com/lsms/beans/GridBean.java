@@ -32,13 +32,54 @@ public class GridBean {
     private String blName ;
     private boolean extState;                              //    for chescking extended ls status of grid
     private boolean unSchLsState ;                         //    for chescking unscheduled ls status of grid
-    private boolean overloadState ;                        //    for chescking overloading status of grid
+    private boolean deviationState ;                        //    for chescking overloading status of grid
     private Query q;
     private List<String> nameList ;
-    private List<Grids> gridList;
-    private static final String qForB_id = "SELECT b FROM Block b WHERE b.blockName = :blName" ;
-
+    private List<Grids> gridsList;
+    private Grids selectedGrid ;
+    private String newGridName ;
+    private String newBlockName ;
    
+    public void onGridSelection(Grids g){
+        System.out.println("selected grid "+g.getGridName());
+        selectedGrid = g ;
+    }
+    
+    public void gridEditer(){
+        try {
+            System.out.println("grid Name " + newGridName + " block name "+ newBlockName);
+            
+            if(!newGridName.equals("")){
+                System.out.println("entered first condition");
+                em.find(Grids.class, selectedGrid.getGridId()).setGridName(newGridName);
+                em.find(Grids.class, selectedGrid.getGridId()).setExtensionStatus(extState);
+                em.find(Grids.class, selectedGrid.getGridId()).setDeviationStatus(deviationState);
+                em.find(Grids.class, selectedGrid.getGridId()).setUnSchLs(unSchLsState);
+            }
+            if (!newBlockName.equals("")) {
+                System.out.println("entered second condition");
+                q = em.createQuery("SELECT b FROM Block b WHERE b.blockName = :bn")
+                        .setParameter("bn", getNewBlockName());
+                em.find(Grids.class, selectedGrid.getGridId()).setBlockId((Block)q.getSingleResult());
+                em.find(Grids.class, selectedGrid.getGridId()).setExtensionStatus(extState);
+                em.find(Grids.class, selectedGrid.getGridId()).setDeviationStatus(deviationState);
+                em.find(Grids.class, selectedGrid.getGridId()).setUnSchLs(unSchLsState);
+            }
+            if (newGridName.equals("") && newBlockName.equals("")) {
+                System.out.println("entered third condition");
+                em.find(Grids.class, selectedGrid.getGridId()).setExtensionStatus(extState);
+                em.find(Grids.class, selectedGrid.getGridId()).setDeviationStatus(deviationState);
+                em.find(Grids.class, selectedGrid.getGridId()).setUnSchLs(unSchLsState);
+            }
+        } catch (Exception e) {
+            System.out.println("Exception in the method gridEditer()" + e);
+        }
+    }
+    
+    public void gridDeleter(Grids g) {
+        em.remove(em.find(Grids.class, g.getGridId()));
+    }
+    
     /**
      * @return the grName
      */
@@ -111,35 +152,19 @@ public class GridBean {
     }
 
     /**
-     * @return the overloadState
+     * @return the deviationState
      */
-    public boolean getOverloadState() {
-        return overloadState;
+    public boolean getDeviationState() {
+        return deviationState;
     }
 
     /**
-     * @param overloadState the overloadState to set
+     * @param deviationState the deviationState to set
      */
-    public void setOverloadState(boolean overloadState) {
-        this.overloadState = overloadState;
+    public void setDeviationState(boolean deviationState) {
+        this.deviationState = deviationState;
     }
 
-    /**
-     * @return the gridList
-     */
-    public List<Grids> getGridList() {
-        listOfGridsNames();
-        return gridList;
-    }
-
-    /**
-     * @param gridList the gridList to set
-     */
-    public void setGridList(List<Grids> gridList) {
-        this.gridList = gridList;
-    }
-
-    
     public void blockNames(){
         q = em.createQuery("SELECT b.blockName FROM Block b");
         setNameList(q.getResultList());
@@ -151,15 +176,70 @@ public class GridBean {
         Block b ;
         
         g.setGridName(grName);
-        q = em.createQuery(qForB_id).setParameter("blName", getBlName());
+        q = em.createQuery("SELECT b FROM Block b WHERE b.blockName = :bn").setParameter("blName", getBlName());
         b = (Block) q.getSingleResult();
         g.setBlockId(b);
         em.persist(g);
     }
 
-    public void listOfGridsNames(){
+   
+
+    /**
+     * @return the selectedGrid
+     */
+    public Grids getSelectedGrid() {
+        return selectedGrid;
+    }
+
+    /**
+     * @param selectedGrid the selectedGrid to set
+     */
+    public void setSelectedGrid(Grids selectedGrid) {
+        this.selectedGrid = selectedGrid;
+    }
+
+    /**
+     * @return the newGridName
+     */
+    public String getNewGridName() {
+        return newGridName;
+    }
+
+    /**
+     * @param newGridName the newGridName to set
+     */
+    public void setNewGridName(String newGridName) {
+        this.newGridName = newGridName;
+    }
+
+    /**
+     * @return the gridsList
+     */
+    public List<Grids> getGridsList() {
         q = em.createQuery("SELECT g FROM Grids g");
-        setGridList(q.getResultList());
+        setGridsList(q.getResultList());
+        return gridsList;
+    }
+
+    /**
+     * @param gridsList the gridsList to set
+     */
+    public void setGridsList(List<Grids> gridsList) {
+        this.gridsList = gridsList;
+    }
+
+    /**
+     * @return the newBlockName
+     */
+    public String getNewBlockName() {
+        return newBlockName;
+    }
+
+    /**
+     * @param newBlockName the newBlockName to set
+     */
+    public void setNewBlockName(String newBlockName) {
+        this.newBlockName = newBlockName;
     }
 
 

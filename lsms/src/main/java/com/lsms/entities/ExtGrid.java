@@ -40,6 +40,10 @@ public class ExtGrid implements Serializable {
     @OneToOne
     @JoinColumn(name = "grid_id")
     private Grids extGridId ;
+    
+    @NotNull
+    @Column(name = "grid_load")
+    private int gridLoad ;
 
     /**
      * @return the gridExtensionId
@@ -74,5 +78,19 @@ public class ExtGrid implements Serializable {
      */
     public void setExtGridId(Grids extGridId) {
         this.extGridId = extGridId;
+    }
+
+    /**
+     * @return the gridLoad
+     */
+    public int getGridLoad() {
+        return gridLoad;
+    }
+
+    /**
+     * @param gridLoad the gridLoad to set
+     */
+    public void setGridLoad(int gridLoad) {
+        this.gridLoad = gridLoad;
     }
 }

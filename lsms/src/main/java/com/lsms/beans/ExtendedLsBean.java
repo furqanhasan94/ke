@@ -11,6 +11,8 @@ import com.lsms.entities.ExtCategoriesTime;
 import com.lsms.entities.ExtGrid;
 import com.lsms.entities.ExtendedLs;
 import com.lsms.entities.Grids;
+import com.lsms.entities.LsDetails;
+import com.lsms.entities.ShededCategory;
 import java.io.Serializable;
 import java.sql.Time;
 import java.util.ArrayList;
@@ -63,6 +65,8 @@ public class ExtendedLsBean implements Serializable{
     */
     private List<String> grids ;
     private List<String> selectedGrids ;
+    
+    private int loadSum ;
 
 /* 
 **
@@ -113,6 +117,7 @@ public class ExtendedLsBean implements Serializable{
         ExtendedLs event = persistEvent();
         persistCatTime(event);
         persistExtGrid(event);
+        lsDetailCreater(event);
     }
     /*
     ** this Function is used to persist ExtendedLs(the event)
@@ -130,12 +135,17 @@ public class ExtendedLsBean implements Serializable{
             els.setExtStatus(true);
             em.persist(els);
             em.flush();
+            
         } catch (PersistenceException e) {
             System.out.println("Persistence exception at persist event function" + e);
         }
         return els;
     }
     
+    
+        
+    
+
     
     /*
     ** this method is used for persisting the extended time of the categories.
@@ -162,17 +172,59 @@ public class ExtendedLsBean implements Serializable{
     */
     private void persistExtGrid(ExtendedLs event){
         try {
+            loadSum = 0 ;
               for (ExtGrid eg : egrdList) {
                 Grids g = em.find(Grids.class, eg.getExtGridId().getGridId());
                 g.setExtensionStatus(true   );
                 eg.setExtEventId(event);
+                loadSum = loadSum + eg.getGridLoad() ;
                 em.persist(eg);
             }
         } catch (PersistenceException pe) {
             System.out.println("Persistence exception at persistExtGrid() function" + pe);
         }
     }
-
+    
+    private void lsDetailCreater(ExtendedLs event){
+            try {
+                System.out.println("****************************************");
+                System.out.println("Starting lsDetailCreater() to log the newly");
+                System.out.println("created extended ls event into the details");
+                System.out.println("****************************************");
+                q = em.createQuery("SELECT MAX(lsd.detailId) FROM LsDetails lsd");
+                LsDetails detail = em.find(LsDetails.class, (Integer)q.getSingleResult());
+                if(     new Date().getDate() == detail.getEntryDate().getDate()
+                        && new Date().getMonth() == detail.getEntryDate().getMonth()
+                        && new Date().getYear() == detail.getEntryDate().getYear()){
+                    System.out.println(loadSum);
+                    System.out.println("Dates matched, events are of same date");
+                    LsDetails newDetail = new LsDetails();
+                    newDetail.setEntryDate(event.getEventDate());
+                    newDetail.setStartTime(event.getStTime());
+                    q = em.createQuery("SELECT f.value FROM PowerFactor f WHERE f.inUse = TRUE");
+                    newDetail.setMwhLoad((loadSum/(Integer)q.getSingleResult()) + detail.getMwhLoad());
+                    newDetail.setReason("Extended Ls");
+                    em.persist(newDetail);
+                    em.find(LsDetails.class, detail.getDetailId()).setEndTime(newDetail.getStartTime());
+                }else{
+                    System.out.println("Dates didn't matched, events are not of same date");
+                    LsDetails newDetail = new LsDetails();
+                    newDetail.setEntryDate(event.getEventDate());
+                    newDetail.setStartTime(event.getStTime());
+                    newDetail.setMwhLoad(loadSum/(Integer)q.getSingleResult());
+                    newDetail.setReason("Extended Ls");
+                    em.persist(newDetail);
+                }
+            } catch (Exception e) {
+                System.out.println("No previous event is present, running catch");
+                    LsDetails newDetail = new LsDetails();
+                    newDetail.setEntryDate(event.getEventDate());
+                    newDetail.setStartTime(event.getStTime());
+                    newDetail.setMwhLoad(loadSum/(Integer)q.getSingleResult());
+                    newDetail.setReason("Extended Ls");
+                    em.persist(newDetail);
+            }
+        }
     /*
     **  
     **

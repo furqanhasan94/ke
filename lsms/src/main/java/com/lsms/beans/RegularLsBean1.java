@@ -28,9 +28,9 @@ import javax.persistence.Query;
  *
  * @author furqan
  */
-@Named
-@Stateless
-public class RegularLsBean {
+//@Named
+//@Stateless
+public class RegularLsBean1 {
 
     @PersistenceContext
     EntityManager em ;

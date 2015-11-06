@@ -21,8 +21,7 @@ import javax.persistence.Query;
  * @author furqan
  */
 
-@Named
-@Stateless
+
 public class ExtendedLsEvent {
 
     

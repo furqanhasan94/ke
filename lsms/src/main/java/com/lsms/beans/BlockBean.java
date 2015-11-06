@@ -27,7 +27,22 @@ public class BlockBean {
     
     private String blockName;
     private List<Block> blockList ;
+    
+    private Block selectedBlock ;
+    private String newBlockName ;
+    
+    public void onBlockSelection(Block b){
+        setSelectedBlock(b) ;
+    }
+    
+    public void blockEditor(){
+        em.find(Block.class, getSelectedBlock().getBlockId()).setBlockName(getNewBlockName());
+    }
 
+    public void blockDeleter(Block b){
+        em.remove(em.find(Block.class, b.getBlockId()));
+    }
+    
     /**
      * @return the blockName
      */
@@ -73,5 +88,33 @@ public class BlockBean {
         catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * @return the selectedBlock
+     */
+    public Block getSelectedBlock() {
+        return selectedBlock;
+    }
+
+    /**
+     * @param selectedBlock the selectedBlock to set
+     */
+    public void setSelectedBlock(Block selectedBlock) {
+        this.selectedBlock = selectedBlock;
+    }
+
+    /**
+     * @return the newBlockName
+     */
+    public String getNewBlockName() {
+        return newBlockName;
+    }
+
+    /**
+     * @param newBlockName the newBlockName to set
+     */
+    public void setNewBlockName(String newBlockName) {
+        this.newBlockName = newBlockName;
     }
 }

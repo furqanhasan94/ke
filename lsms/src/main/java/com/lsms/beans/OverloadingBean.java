@@ -7,6 +7,7 @@
 package com.lsms.beans;
 
 import com.lsms.entities.Feeder;
+import com.lsms.entities.LsDetails;
 import com.lsms.entities.OverloadEvent;
 import com.lsms.entities.OverloadingFeeder;
 import java.sql.Time;
@@ -49,6 +50,8 @@ public class OverloadingBean {
     private Date eventStartTime ;
     private Date eventEndTime ;
     
+    private int loadSum ;
+    
     /**
      * functionalities of Overloading bean
      * starts from here
@@ -85,7 +88,9 @@ public class OverloadingBean {
     }
     
     public void onSubmit(){
-        persistOverloadingFeeder(persistOverloadEvent());
+        OverloadEvent e = persistOverloadEvent() ;
+        persistOverloadingFeeder(e);
+        lsDetailCreater(e);
     }
     
     private OverloadEvent persistOverloadEvent(){
@@ -100,6 +105,7 @@ public class OverloadingBean {
     }
     
     private void persistOverloadingFeeder(OverloadEvent event){
+        loadSum = 0;
         for (OverloadFeeder ovf : ovlFeederList) {
             try {
                 OverloadingFeeder f = new OverloadingFeeder();
@@ -110,6 +116,7 @@ public class OverloadingBean {
                 f.setFdOvlEndTime(new Time(ovf.getOnTime().getHours(),ovf.getOnTime().getMinutes(), ovf.getOnTime().getSeconds()));
                 f.setFdOvlStartTime(new Time(ovf.getOffTime().getHours(),ovf.getOffTime().getMinutes(), ovf.getOffTime().getSeconds()));
                 f.setFeederLoad(ovf.getLoad());
+                loadSum = loadSum + f.getFeederLoad();
                 em.persist(f);
 
             } catch (Exception e) {
@@ -117,6 +124,47 @@ public class OverloadingBean {
             }
         }
     }
+    
+    private void lsDetailCreater(OverloadEvent event){
+            try {
+                System.out.println("****************************************");
+                System.out.println("Starting lsDetailCreater() to log the newly");
+                System.out.println("created Overloading event into the details");
+                System.out.println("****************************************");
+                q = em.createQuery("SELECT MAX(lsd.detailId) FROM LsDetails lsd");
+                LsDetails detail = em.find(LsDetails.class, (Integer)q.getSingleResult());
+                if(     new Date().getDate() == detail.getEntryDate().getDate()
+                        && new Date().getMonth() == detail.getEntryDate().getMonth()
+                        && new Date().getYear() == detail.getEntryDate().getYear()){
+                    System.out.println(loadSum);
+                    System.out.println("Dates matched, events are of same date");
+                    LsDetails newDetail = new LsDetails();
+                    newDetail.setEntryDate(event.getEventDate());
+                    newDetail.setStartTime(event.getEventStartTime());
+                    q = em.createQuery("SELECT f.value FROM PowerFactor f WHERE f.inUse = TRUE");
+                    newDetail.setMwhLoad((loadSum/(Integer)q.getSingleResult()) + detail.getMwhLoad());
+                    newDetail.setReason("Overloading");
+                    em.persist(newDetail);
+                    em.find(LsDetails.class, detail.getDetailId()).setEndTime(newDetail.getStartTime());
+                }else{
+                    System.out.println("Dates didn't matched, events are not of same date");
+                    LsDetails newDetail = new LsDetails();
+                    newDetail.setEntryDate(event.getEventDate());
+                    newDetail.setStartTime(event.getEventStartTime());
+                    newDetail.setMwhLoad(loadSum/(Integer)q.getSingleResult());
+                    newDetail.setReason("Overloading");
+                    em.persist(newDetail);
+                }
+            } catch (Exception e) {
+                System.out.println("No previous event is present, running catch");
+                    LsDetails newDetail = new LsDetails();
+                    newDetail.setEntryDate(event.getEventDate());
+                    newDetail.setStartTime(event.getEventStartTime());
+                    newDetail.setMwhLoad(loadSum/(Integer)q.getSingleResult());
+                    newDetail.setReason("Extended Ls");
+                    em.persist(newDetail);
+            }
+        }
     
     /**
      * Getters and setters of overloading bean starts from here

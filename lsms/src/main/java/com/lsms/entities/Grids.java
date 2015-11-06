@@ -31,11 +31,9 @@ public class Grids implements Serializable {
     @Column(name = "grid_id")
     private int gridId ;
     
-    @NotNull
     @Column(name = "grid_name")
     private String gridName;
     
-    @NotNull
     @ManyToOne
     @JoinColumn(name = "block_id")
     private Block block;

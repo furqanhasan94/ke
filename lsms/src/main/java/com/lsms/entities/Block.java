@@ -26,14 +26,14 @@ public class Block implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="b_id")
-    private String blockId;
+    private int blockId;
     
     @NotNull
     @Column(name="block_name")
     private String blockName ;
     
     
-    public String getBlockId() {
+    public int getBlockId() {
         return blockId ;
     }
     

@@ -39,8 +39,11 @@
                         </h:panelGrid>
                         <p:separator/>
                         <p:dataTable id="gridTable" value="#{unscheduledLsBean.uslg}" var="g">
-                            <p:column>
+                            <p:column headerText="Grid Name">
                                 <h:outputText value="#{g.uslGridId.gridName}"/>
+                            </p:column>
+                            <p:column headerText="Grid Load">
+                                <h:inputText value="#{g.gridLoad}"/>
                             </p:column>
                         </p:dataTable>
                     </p:panel>

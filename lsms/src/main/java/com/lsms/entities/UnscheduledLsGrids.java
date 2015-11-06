@@ -41,6 +41,10 @@ public class UnscheduledLsGrids implements Serializable {
     @JoinColumn(name = "grid_id")
     private Grids uslGridId ;
     
+    @NotNull
+    @Column(name = "grid_load")
+    private int gridLoad ;
+    
     public int getId() {
         return id;
     }
@@ -71,6 +75,20 @@ public class UnscheduledLsGrids implements Serializable {
      */
     public void setUslGridId(Grids uslGridId) {
         this.uslGridId = uslGridId;
+    }
+
+    /**
+     * @return the gridLoad
+     */
+    public int getGridLoad() {
+        return gridLoad;
+    }
+
+    /**
+     * @param gridLoad the gridLoad to set
+     */
+    public void setGridLoad(int gridLoad) {
+        this.gridLoad = gridLoad;
     }
 
     

@@ -77,9 +77,9 @@ public class PriorityBean {
             lp.setFeeder(feeder);
             em.find(Feeder.class, feeder.getFeedId()).setLsPriority(true);
             lp.setStDate(new java.sql.Date(startDate.getYear() , startDate.getMonth() , startDate.getDate() ));
-            lp.seteDate(new java.sql.Date(endDate.getYear() , endDate.getMonth() , endDate.getDate() ));
-            lp.setsTime(new Time(startTime.getHours(), startTime.getMinutes(), startTime.getSeconds()));
-            lp.seteTime(new Time(endTime.getHours(), endTime.getMinutes(), endTime.getSeconds()));
+            lp.setEndDate(new java.sql.Date(endDate.getYear() , endDate.getMonth() , endDate.getDate() ));
+            lp.setStTime(new Time(startTime.getHours(), startTime.getMinutes(), startTime.getSeconds()));
+            lp.setEndTime(new Time(endTime.getHours(), endTime.getMinutes(), endTime.getSeconds()));
             lp.setSboName(name);
             lp.setPriorityStatus(true);
             em.persist(lp);

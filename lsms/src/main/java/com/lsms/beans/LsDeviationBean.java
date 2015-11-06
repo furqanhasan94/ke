@@ -42,7 +42,9 @@ public class LsDeviationBean {
     private Date endTime ;
     private Date eventDate ; 
     private boolean disable =  true;
-    private LsDeviation eventId ;
+    
+    private int loadSum ;
+    
     /*
     ************************* functionality of LsDeviationBean
     */
@@ -63,6 +65,23 @@ public class LsDeviationBean {
     public void onEventCreation(){
         System.out.println("onEventCreeation()");
         setDisable(false);
+//        LsDeviation ld = new LsDeviation();
+//        ld.setStTime(new Time(stTime.getHours(), stTime.getMinutes(), stTime.getSeconds()));
+//        ld.setEnTime(new Time(endTime.getHours(), endTime.getMinutes(), endTime.getSeconds()));
+//        ld.setEventDate(new java.sql.Date(new Date().getTime()));
+//        ld.setDevStatus(true);
+//        em.persist(ld);
+//        em.flush();
+//        eventId = ld ;
+    }
+
+    public void onSubmit(){
+        LsDeviation dev = persistDeviation() ;
+        persistDevGrid(dev);
+        lsDetailCreater(dev);
+    }
+    
+    private LsDeviation persistDeviation(){
         LsDeviation ld = new LsDeviation();
         ld.setStTime(new Time(stTime.getHours(), stTime.getMinutes(), stTime.getSeconds()));
         ld.setEnTime(new Time(endTime.getHours(), endTime.getMinutes(), endTime.getSeconds()));
@@ -70,22 +89,65 @@ public class LsDeviationBean {
         ld.setDevStatus(true);
         em.persist(ld);
         em.flush();
-        eventId = ld ;
+        return ld ;
     }
-
-    public void onSubmit(){
+    
+    private void persistDevGrid(LsDeviation event){
+        loadSum = 0;
         for(DevCats c :devCats){
             DeviationCategory dc = new DeviationCategory();
-            dc.setDevEvent(eventId);
+            dc.setDevEvent(event);
             dc.setGridId(c.getDevGrid());
             em.find(Grids.class, c.getDevGrid().getGridId()).setDeviationStatus(true);
             dc.setDevCat(c.getDevCat());
             dc.setLoad(c.getCatLoad());
+            loadSum = loadSum + c.getCatLoad();
             dc.setFeeders(c.getNumOfFeedsDev());
             
             em.persist(dc);
         }
     }
+    
+    private void lsDetailCreater(LsDeviation event){
+            try {
+                System.out.println("****************************************");
+                System.out.println("Starting lsDetailCreater() to log the newly");
+                System.out.println("created ls Deviation event into the details");
+                System.out.println("****************************************");
+                q = em.createQuery("SELECT MAX(lsd.detailId) FROM LsDetails lsd");
+                LsDetails detail = em.find(LsDetails.class, (Integer)q.getSingleResult());
+                if(     new Date().getDate() == detail.getEntryDate().getDate()
+                        && new Date().getMonth() == detail.getEntryDate().getMonth()
+                        && new Date().getYear() == detail.getEntryDate().getYear()){
+                    System.out.println(loadSum);
+                    System.out.println("Dates matched, events are of same date");
+                    LsDetails newDetail = new LsDetails();
+                    newDetail.setEntryDate(event.getEventDate());
+                    newDetail.setStartTime(event.getStTime());
+                    q = em.createQuery("SELECT f.value FROM PowerFactor f WHERE f.inUse = TRUE");
+                    newDetail.setMwhLoad((loadSum/(Integer)q.getSingleResult()) + detail.getMwhLoad());
+                    newDetail.setReason("Ls Deviation");
+                    em.persist(newDetail);
+                    em.find(LsDetails.class, detail.getDetailId()).setEndTime(newDetail.getStartTime());
+                }else{
+                    System.out.println("Dates didn't matched, events are not of same date");
+                    LsDetails newDetail = new LsDetails();
+                    newDetail.setEntryDate(event.getEventDate());
+                    newDetail.setStartTime(event.getStTime());
+                    newDetail.setMwhLoad(loadSum/(Integer)q.getSingleResult());
+                    newDetail.setReason("Ls Deviation");
+                    em.persist(newDetail);
+                }
+            } catch (Exception e) {
+                System.out.println("No previous event is present, running catch");
+                    LsDetails newDetail = new LsDetails();
+                    newDetail.setEntryDate(event.getEventDate());
+                    newDetail.setStartTime(event.getStTime());
+                    newDetail.setMwhLoad(loadSum/(Integer)q.getSingleResult());
+                    newDetail.setReason("Ls Deviation");
+                    em.persist(newDetail);
+            }
+        }
     
     public void onGroupSelection(){
         System.out.println("Executing function OnGroupSelection()");
@@ -146,6 +208,47 @@ public class LsDeviationBean {
             System.out.println("Sql exception at getCategories()" + e);
         }
     }
+    
+    private void lsDetailCreater(UnscheduledLs event){
+            try {
+                System.out.println("****************************************");
+                System.out.println("Starting lsDetailCreater() to log the newly");
+                System.out.println("created unscheduled ls event into the details");
+                System.out.println("****************************************");
+                q = em.createQuery("SELECT MAX(lsd.detailId) FROM LsDetails lsd");
+                LsDetails detail = em.find(LsDetails.class, (Integer)q.getSingleResult());
+                if(     new Date().getDate() == detail.getEntryDate().getDate()
+                        && new Date().getMonth() == detail.getEntryDate().getMonth()
+                        && new Date().getYear() == detail.getEntryDate().getYear()){
+                    System.out.println(loadSum);
+                    System.out.println("Dates matched, events are of same date");
+                    LsDetails newDetail = new LsDetails();
+                    newDetail.setEntryDate(event.getEntryDate());
+                    newDetail.setStartTime(event.getStartTime());
+                    q = em.createQuery("SELECT f.value FROM PowerFactor f WHERE f.inUse = TRUE");
+                    newDetail.setMwhLoad((loadSum/(Integer)q.getSingleResult()) + detail.getMwhLoad());
+                    newDetail.setReason("Unscheduled Ls");
+                    em.persist(newDetail);
+                    em.find(LsDetails.class, detail.getDetailId()).setEndTime(newDetail.getStartTime());
+                }else{
+                    System.out.println("Dates didn't matched, events are not of same date");
+                    LsDetails newDetail = new LsDetails();
+                    newDetail.setEntryDate(event.getEntryDate());
+                    newDetail.setStartTime(event.getStartTime());
+                    newDetail.setMwhLoad(loadSum/(Integer)q.getSingleResult());
+                    newDetail.setReason("Extended Ls");
+                    em.persist(newDetail);
+                }
+            } catch (Exception e) {
+                System.out.println("No previous event is present, running catch");
+                    LsDetails newDetail = new LsDetails();
+                    newDetail.setEntryDate(event.getEntryDate());
+                    newDetail.setStartTime(event.getStartTime());
+                    newDetail.setMwhLoad(loadSum/(Integer)q.getSingleResult());
+                    newDetail.setReason("Extended Ls");
+                    em.persist(newDetail);
+            }
+        }
     
     /*
     ****************************** getter and Setters

@@ -25,6 +25,10 @@
     <class>com.lsms.entities.SpecialCycleLoad</class>
     <class>com.lsms.entities.LsPriority</class>
     <class>com.lsms.entities.PriorityCycles</class>
+    <class>com.lsms.entities.ShededCategory</class>
+    <class>com.lsms.entities.ShededGrid</class>
+    <class>com.lsms.entities.PowerFactor</class>
+    <class>com.lsms.entities.LsDetails</class>
     <shared-cache-mode>NONE</shared-cache-mode>
   </persistence-unit>
 </persistence>

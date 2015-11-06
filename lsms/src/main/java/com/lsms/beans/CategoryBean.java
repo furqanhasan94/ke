@@ -29,6 +29,22 @@ public class CategoryBean {
    private String catName ;
    private List<Categories> cList;
    
+   private Categories selectedCategory ;
+   private String newCategoryName ;
+   
+   public void onCatSelection(Categories c){
+       System.out.println("There's a raging fire in my heart tonight");
+       selectedCategory = c ;
+   }
+   
+   public void categoryEditor(){
+       em.find(Categories.class, selectedCategory.getCatId()).setCatName(newCategoryName);
+   }
+   
+   public void categoryDeleter(Categories c){
+       em.remove(em.find(Categories.class, c.getCatId()));
+   }
+   
     /**
      * @return the catName
      */
@@ -72,5 +88,33 @@ public class CategoryBean {
             Query q = em.createQuery("SELECT c FROM Categories c");
             setCList(q.getResultList());
         
+    }
+
+    /**
+     * @return the selectedCategory
+     */
+    public Categories getSelectedCategory() {
+        return selectedCategory;
+    }
+
+    /**
+     * @param selectedCategory the selectedCategory to set
+     */
+    public void setSelectedCategory(Categories selectedCategory) {
+        this.selectedCategory = selectedCategory;
+    }
+
+    /**
+     * @return the newCategoryName
+     */
+    public String getNewCategoryName() {
+        return newCategoryName;
+    }
+
+    /**
+     * @param newCategoryName the newCategoryName to set
+     */
+    public void setNewCategoryName(String newCategoryName) {
+        this.newCategoryName = newCategoryName;
     }
 }

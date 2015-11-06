@@ -32,6 +32,12 @@ public class Categories implements Serializable {
     @Column(name = "cat_name")
     private String catName ;
     
+    @NotNull
+    @Column(name = "ls_status")
+    private boolean lsStatus ;
+    
+    
+    
     public int getCatId(){
         return catId ;
     }
@@ -47,6 +53,20 @@ public class Categories implements Serializable {
     @Override
     public String toString() {
         return "com.lsms.entities.Categories[ id=" + catId + " ]";
+    }
+
+    /**
+     * @return the lsStatus
+     */
+    public boolean getLsStatus() {
+        return lsStatus;
+    }
+
+    /**
+     * @param lsStatus the lsStatus to set
+     */
+    public void setLsStatus(boolean lsStatus) {
+        this.lsStatus = lsStatus;
     }
     
 }

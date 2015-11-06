@@ -8,6 +8,7 @@ package com.lsms.beans;
 
 import com.lsms.entities.ExtGrid;
 import com.lsms.entities.Grids;
+import com.lsms.entities.LsDetails;
 import com.lsms.entities.UnscheduledLs;
 import com.lsms.entities.UnscheduledLsGrids;
 import java.io.Serializable;
@@ -51,6 +52,7 @@ public class UnscheduledLsBean implements Serializable{
     */
     private List<String> grids ;
     private List<String> selectedGrids ;
+    private int loadSum ;
 
     /*
     ** functionality of unschedule ls starts from here
@@ -59,6 +61,7 @@ public class UnscheduledLsBean implements Serializable{
         System.out.println("Starting createUlEvent() function");
         UnscheduledLs event = persistEvent();
         persistUlsGrids(event);
+        lsDetailCreater(event);
     }
     
     private UnscheduledLs persistEvent(){
@@ -82,16 +85,59 @@ public class UnscheduledLsBean implements Serializable{
     private void persistUlsGrids(UnscheduledLs uls){
         System.out.println("Starting persistUlsGrids() function");
         try {
+            loadSum = 0 ;
               for (UnscheduledLsGrids ug : uslg) {
                 Grids g = em.find(Grids.class, ug.getUslGridId().getGridId());
                 g.setUnSchLs(true);
                 ug.setUslEventId(uls);
+                loadSum = loadSum + ug.getGridLoad();
                 em.persist(ug);
             }
         } catch (PersistenceException pe) {
             System.out.println("Persistence exception at persistExtGrid() function" + pe);
         }
     }
+    
+    private void lsDetailCreater(UnscheduledLs event){
+            try {
+                System.out.println("****************************************");
+                System.out.println("Starting lsDetailCreater() to log the newly");
+                System.out.println("created unscheduled ls event into the details");
+                System.out.println("****************************************");
+                q = em.createQuery("SELECT MAX(lsd.detailId) FROM LsDetails lsd");
+                LsDetails detail = em.find(LsDetails.class, (Integer)q.getSingleResult());
+                if(     new Date().getDate() == detail.getEntryDate().getDate()
+                        && new Date().getMonth() == detail.getEntryDate().getMonth()
+                        && new Date().getYear() == detail.getEntryDate().getYear()){
+                    System.out.println(loadSum);
+                    System.out.println("Dates matched, events are of same date");
+                    LsDetails newDetail = new LsDetails();
+                    newDetail.setEntryDate(event.getEntryDate());
+                    newDetail.setStartTime(event.getStartTime());
+                    q = em.createQuery("SELECT f.value FROM PowerFactor f WHERE f.inUse = TRUE");
+                    newDetail.setMwhLoad((loadSum/(Integer)q.getSingleResult()) + detail.getMwhLoad());
+                    newDetail.setReason("Unscheduled Ls");
+                    em.persist(newDetail);
+                    em.find(LsDetails.class, detail.getDetailId()).setEndTime(newDetail.getStartTime());
+                }else{
+                    System.out.println("Dates didn't matched, events are not of same date");
+                    LsDetails newDetail = new LsDetails();
+                    newDetail.setEntryDate(event.getEntryDate());
+                    newDetail.setStartTime(event.getStartTime());
+                    newDetail.setMwhLoad(loadSum/(Integer)q.getSingleResult());
+                    newDetail.setReason("Unscheduled Ls");
+                    em.persist(newDetail);
+                }
+            } catch (Exception e) {
+                System.out.println("No previous event is present, running catch");
+                    LsDetails newDetail = new LsDetails();
+                    newDetail.setEntryDate(event.getEntryDate());
+                    newDetail.setStartTime(event.getStartTime());
+                    newDetail.setMwhLoad(loadSum/(Integer)q.getSingleResult());
+                    newDetail.setReason("Unscheduled Ls");
+                    em.persist(newDetail);
+            }
+        }
     
     public void gridSelectionFunction(){
         System.out.println("****updating the selection of grids*****");

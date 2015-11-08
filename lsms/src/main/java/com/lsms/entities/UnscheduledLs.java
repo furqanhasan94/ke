@@ -24,12 +24,12 @@ import javax.validation.constraints.NotNull;
  * @author furqan
  */
 @Entity
-@Table(name = "unscheduledls")
+@Table(name = "unscheduled_ls")
 public class UnscheduledLs implements Serializable {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "eventid")
+    @Column(name = "event_id")
     private int id;
 
     @NotNull

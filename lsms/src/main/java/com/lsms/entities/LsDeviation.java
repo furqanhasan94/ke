@@ -23,7 +23,7 @@ import javax.validation.constraints.NotNull;
  * @author furqan
  */
 @Entity
-@Table(name = "lsdeviation")
+@Table(name = "ls_deviation")
 public class LsDeviation implements Serializable {
     
     @Id
@@ -43,7 +43,7 @@ public class LsDeviation implements Serializable {
     private Date eventDate ;
     
     @NotNull
-    @Column(name = "status")
+    @Column(name = "dev_status")
     private boolean devStatus ;
     
     /**
